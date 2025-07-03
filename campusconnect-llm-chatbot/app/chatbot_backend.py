@@ -1,31 +1,22 @@
 import os
-import openai
+from openai import OpenAI
 from dotenv import load_dotenv
 
-# Load environment variables from .env
 load_dotenv()
 
-# Azure OpenAI Configuration
-openai.api_type = "azure"
-openai.api_key = os.getenv("AZURE_OPENAI_KEY")
-openai.api_base = os.getenv("AZURE_OPENAI_ENDPOINT")
-openai.api_version = "2023-05-15"
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
-deployment_name = os.getenv("AZURE_DEPLOYMENT_NAME")
-
-def ask_bot(user_input):
+def ask_bot(question):
     try:
-        # Load prompt template
-        with open("prompts/academic_assistant_prompt.txt", "r") as f:
-            system_prompt = f.read()
-
-        response = openai.ChatCompletion.create(
-            engine=deployment_name,
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
             messages=[
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": user_input}
-            ]
+                {"role": "system", "content": "You are an academic assistant helping university students."},
+                {"role": "user", "content": question}
+            ],
+            temperature=0.7,
+            max_tokens=800
         )
-        return response["choices"][0]["message"]["content"]
+        return response.choices[0].message.content
     except Exception as e:
         return f"❌ Error: {str(e)}"
