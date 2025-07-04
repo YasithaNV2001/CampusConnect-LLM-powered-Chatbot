@@ -29,3 +29,4 @@ wcwidth==0.2.13
 streamlit
 openai>=1.0.0
 python-dotenv
+requests
