@@ -1,7 +1,7 @@
 import streamlit as st
 from chatbot_backend import ask_bot
 
-port = int(os.getenv('PORT', 8501))
+PORT = int(os.environ.get("PORT", 8000))
 st.set_page_config(page_title="CampusConnect AI Assistant", page_icon="🎓")
 
 st.markdown("""
